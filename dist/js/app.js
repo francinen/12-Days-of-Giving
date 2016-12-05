@@ -6,7 +6,7 @@ var ORGANIZATIONS = [{
     name: 'SKETCH',
     site_url: 'http://sketch.ca/',
     support_url: 'http://sketch.ca/support-sketch/',
-    desc: 'Support creative programs that empower young people who experience poverty, homelessness, and marginalization',
+    desc: 'Support creative programs that empower impoverished, homeless, and marginalized youth',
     date: 1481605200000,
     date_string: 'December 13'
 }, {
@@ -90,8 +90,15 @@ var ORGANIZATIONS = [{
 
 function init() {
     renderBoxes();
-    $('.box').on('click', function () {
-        $(this).toggleClass('open');
+    $('.box button:not(.open)').on('click', function (e) {
+        e.preventDefault();
+        var $this = $(this);
+        $this.addClass('open');
+        this.tabIndex = -1;
+        $this.find('.info')[0].focus();
+        setTimeout(function () {
+            $this.addClass('hideNumber');
+        }, 390);
     });
 }
 
@@ -99,7 +106,7 @@ function renderBoxes() {
     var listItem = '';
 
     ORGANIZATIONS.forEach(function (org) {
-        listItem = '<li class="box">\n                        <h2 class="date">' + org.date_string + '</h2>\n                        <div class="box-content">\n                            <h3 class="name">' + org.name + '</h3>\n                            <p class="description">' + org.desc + '</p>\n                            <ul class="links">\n                                <li>\n                                    <a href="' + org.site_url + '" class="link site-url">Website</a>\n                                </li>\n                                <li>\n                                    <a href="' + org.support_url + '" class="link support-url">Support</a>\n                                </li>\n                            </ul>\n                        </div>\n                    </li>\n        ';
+        listItem = '<li class="box">\n                        <button class="box-content">\n                            <div class="info">\n                                <h3 class="name">' + org.name + '</h3>\n                                <div>\n                                    <h4>What you can do:</h4>\n                                    <p class="description">' + org.desc + '</p>\n                                </div>\n                            </div>\n                            <ul class="links">\n                                <li>\n                                    <a href="' + org.site_url + '" class="link site-url">Visit Site</a>\n                                </li>\n                                <li>\n                                    <a href="' + org.support_url + '" class="link support-url">Support</a>\n                                </li>\n                            </ul>\n                        </button>\n                    </li>\n        ';
 
         $('.boxes').append(listItem);
     });

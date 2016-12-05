@@ -23,3 +23,11 @@ a {
 ul, ol {
     list-style-type: none;
 }
+
+button {
+    border: none;
+    padding: none;
+    background: none;
+    box-shadow: none;
+    font-family: inherit;
+}

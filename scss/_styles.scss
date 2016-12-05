@@ -2,6 +2,7 @@ body {
     font-family: 'Lato', Helvetica, Arial, sans-serif;
     color: $contentColour;
     background: $primaryColour;
+    counter-reset: days 13;
 }
 
 h1, h2 {
@@ -11,7 +12,7 @@ h1, h2 {
 }
 
 h1 {
-    font-size: 2.4rem;
+    font-size: 4.2rem;
 }
 
 h2 {
@@ -43,37 +44,120 @@ h2 {
     position: relative;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     align-items: center;
     width: 100%;
-    height: 16rem;
+    height: 21rem;
     padding: $padding;
     background: #fff;
     font-size: 1rem;
+    box-shadow: inset 0 20px 15px #ddd;
+    cursor: pointer;
 }
 
-.box-content:before {
-    content: '';
+.box-content.open {
+    cursor: default;
+    outline: none;
+}
+
+.box-content::before {
+    counter-increment: days -1;
+    content: counter(days);
     position: absolute;
-    display: block;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     top: 0;
     width: 100%;
     height: 100%;
-    background: $accentColour;
-}
-
-.open .box-content:before {
+    font-family: 'Baskerville', serif;
+    color: $primaryHeadingColour;
+    font-size: 4rem;
+    background: darken($primaryColour, 3%);
+    transition: background 0.8s ease-in-out, transform 0.4s ease-in-out;
     transform-origin: center top;
     transform-style: preserve-3d;
-    transform: perspective(4000px) rotateX(88deg);
+    transform: perspective(0) rotateX(0deg);
+}
+
+.box-content:not(.open):hover::before {
+    transform: perspective(4000px) rotateX(25deg);
+}
+
+.box-content.open::before {
+    background: darken($primaryColour, 8%);
+    animation: open 0.4s forwards;
+}
+
+.box-content.hideNumber::before {
+    content: '';
+}
+
+.box-content::after {
+    content: '';
+    position: absolute;
+    top: -1px;
+    right: -3px;
+    left: -3px;
+    bottom: -3px;
+    z-index: 1;
+    display: block;
+    border: 3px dashed darken($primaryColour, 10%);
+    border-top: 1px solid darken($primaryColour, 5%);
+
+}
+
+.box-content .info,
+.box-content .links {
+    margin-top: auto;
+}
+
+.box-content h4 {
+    margin: 0.5rem 0;
 }
 
 .name {
-    font-size: 1.4rem;
+    color: $primaryColour;
+    font-size: 1.5rem;
+}
+
+.description {
+    font-family: 'Baskerville', serif;
+    font-size: 1.1rem;
 }
 
 .links {
     display: flex;
     justify-content: space-between;
     width: 100%;
+}
+
+.link {
+    border-bottom: 1px dashed $contentColour;
+    padding: 8px 8px 4px;
+    transition: color 0.2s;
+}
+
+.link:hover,
+.link:active,
+.link:focus {
+    color: $primaryColour;
+}
+
+@keyframes peek {
+    0% {
+        transform: perspective(0) rotateX(0deg);
+    }
+    100% {
+        transform: perspective(780px) rotateX(48deg);
+    }
+}
+
+@keyframes open {
+    0% {
+        transform: perspective(0) rotateX(0deg);
+    }
+    100% {
+        transform: perspective(4000px) rotateX(88deg);
+    }
 }

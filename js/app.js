@@ -5,7 +5,7 @@ const ORGANIZATIONS = [
         name: 'SKETCH',
         site_url: 'http://sketch.ca/',
         support_url: 'http://sketch.ca/support-sketch/',
-        desc: 'Support creative programs that empower young people who experience poverty, homelessness, and marginalization',
+        desc: 'Support creative programs that empower impoverished, homeless, and marginalized youth',
         date: 1481605200000,
         date_string: 'December 13'
     },
@@ -101,8 +101,15 @@ const ORGANIZATIONS = [
 
 function init() {
     renderBoxes();
-    $('.box').on('click', function() {
-        $(this).toggleClass('open');
+    $('.box button:not(.open)').on('click', function(e) {
+        e.preventDefault();
+        let $this = $(this);
+        $this.addClass('open');
+        this.tabIndex = -1;
+        $this.find('.info')[0].focus();
+        setTimeout(() => {
+            $this.addClass('hideNumber');
+        }, 390);
     });
 }
 
@@ -111,19 +118,23 @@ function renderBoxes() {
 
     ORGANIZATIONS.forEach((org) => {
         listItem = `<li class="box">
-                        <h2 class="date">${org.date_string}</h2>
-                        <div class="box-content">
-                            <h3 class="name">${org.name}</h3>
-                            <p class="description">${org.desc}</p>
+                        <button class="box-content">
+                            <div class="info">
+                                <h3 class="name">${org.name}</h3>
+                                <div>
+                                    <h4>What you can do:</h4>
+                                    <p class="description">${org.desc}</p>
+                                </div>
+                            </div>
                             <ul class="links">
                                 <li>
-                                    <a href="${org.site_url}" class="link site-url">Website</a>
+                                    <a href="${org.site_url}" class="link site-url">Visit Site</a>
                                 </li>
                                 <li>
                                     <a href="${org.support_url}" class="link support-url">Support</a>
                                 </li>
                             </ul>
-                        </div>
+                        </button>
                     </li>
         `;
 
