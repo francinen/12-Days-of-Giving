@@ -101,30 +101,35 @@ const ORGANIZATIONS = [
 
 function init() {
     renderBoxes();
-    $('.box button:not(.open)').on('click', function(e) {
+    $('.box-flap:not(.open)').on('click', function(e) {
         e.preventDefault();
         let $this = $(this);
         $this.addClass('open');
         this.tabIndex = -1;
-        $this.find('.info')[0].focus();
         setTimeout(() => {
-            $this.addClass('hideNumber');
-        }, 390);
+            $this.addClass('opened');
+        }, 350);
     });
 }
 
 function renderBoxes() {
     let listItem = '';
+    let countdown = ORGANIZATIONS.length;
 
-    ORGANIZATIONS.forEach((org) => {
+    ORGANIZATIONS.forEach((org, index) => {
         listItem = `<li class="box">
-                        <button class="box-content">
+                        <button class="box-flap">
+                            <div class="box-flap-wrapper">
+                                <h2>
+                                    <strong class="countdown"><span>${countdown}</span></strong>
+                                    <em class="date">${org.date_string}</em>
+                                </h2>
+                            </div>
+                        </button>
+                        <div class="box-content">
                             <div class="info">
                                 <h3 class="name">${org.name}</h3>
-                                <div>
-                                    <h4>What you can do:</h4>
-                                    <p class="description">${org.desc}</p>
-                                </div>
+                                <p class="description">${org.desc}</p>
                             </div>
                             <ul class="links">
                                 <li>
@@ -134,11 +139,12 @@ function renderBoxes() {
                                     <a href="${org.support_url}" class="link support-url">Support</a>
                                 </li>
                             </ul>
-                        </button>
+                        </div>
                     </li>
         `;
 
         $('.boxes').append(listItem);
+        countdown -= 1;
     });
 }
 

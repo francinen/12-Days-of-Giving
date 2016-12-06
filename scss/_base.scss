@@ -26,8 +26,16 @@ ul, ol {
 
 button {
     border: none;
-    padding: none;
+    padding: 0;
     background: none;
     box-shadow: none;
     font-family: inherit;
+}
+
+strong {
+    font-weight: normal;
+}
+
+em {
+    font-style: normal;
 }

@@ -90,25 +90,26 @@ var ORGANIZATIONS = [{
 
 function init() {
     renderBoxes();
-    $('.box button:not(.open)').on('click', function (e) {
+    $('.box-flap:not(.open)').on('click', function (e) {
         e.preventDefault();
         var $this = $(this);
         $this.addClass('open');
         this.tabIndex = -1;
-        $this.find('.info')[0].focus();
         setTimeout(function () {
-            $this.addClass('hideNumber');
-        }, 390);
+            $this.addClass('opened');
+        }, 350);
     });
 }
 
 function renderBoxes() {
     var listItem = '';
+    var countdown = ORGANIZATIONS.length;
 
-    ORGANIZATIONS.forEach(function (org) {
-        listItem = '<li class="box">\n                        <button class="box-content">\n                            <div class="info">\n                                <h3 class="name">' + org.name + '</h3>\n                                <div>\n                                    <h4>What you can do:</h4>\n                                    <p class="description">' + org.desc + '</p>\n                                </div>\n                            </div>\n                            <ul class="links">\n                                <li>\n                                    <a href="' + org.site_url + '" class="link site-url">Visit Site</a>\n                                </li>\n                                <li>\n                                    <a href="' + org.support_url + '" class="link support-url">Support</a>\n                                </li>\n                            </ul>\n                        </button>\n                    </li>\n        ';
+    ORGANIZATIONS.forEach(function (org, index) {
+        listItem = '<li class="box">\n                        <button class="box-flap">\n                            <div class="box-flap-wrapper">\n                                <h2>\n                                    <strong class="countdown"><span>' + countdown + '</span></strong>\n                                    <em class="date">' + org.date_string + '</em>\n                                </h2>\n                            </div>\n                        </button>\n                        <div class="box-content">\n                            <div class="info">\n                                <h3 class="name">' + org.name + '</h3>\n                                <p class="description">' + org.desc + '</p>\n                            </div>\n                            <ul class="links">\n                                <li>\n                                    <a href="' + org.site_url + '" class="link site-url">Visit Site</a>\n                                </li>\n                                <li>\n                                    <a href="' + org.support_url + '" class="link support-url">Support</a>\n                                </li>\n                            </ul>\n                        </div>\n                    </li>\n        ';
 
         $('.boxes').append(listItem);
+        countdown -= 1;
     });
 }
 
