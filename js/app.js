@@ -99,23 +99,29 @@ const ORGANIZATIONS = [
     }
 ];
 
+const BOX_FLAP = 'box-flap';
+const OPEN_CLASS = `${BOX_FLAP}--open`;
+const OPENED_CLASS = `${BOX_FLAP}--opened`;
+const CAN_OPEN_CLASS = `${BOX_FLAP}--can-open`;
+const KEEP_CLOSED_CLASS = `${BOX_FLAP}--keep-closed`;
+
 function init() {
     renderBoxes();
-    $('.box-flap.can-open').on('click', function(e) {
+    $(`.${CAN_OPEN_CLASS}`).on('click', function(e) {
         e.preventDefault();
-        $(this).addClass('open');
+        $(this).removeClass(CAN_OPEN_CLASS).addClass(OPEN_CLASS);
         this.tabIndex = -1;
         setTimeout(() => {
-            $(this).addClass('opened').removeClass('can-open');
+            $(this).addClass(OPENED_CLASS);
         }, 350);
 
         const boxDate = $(this).parent().data('date');
         localStorage.setItem(`days_of_giving_${boxDate}`, 'opened');
     });
-    $('.box-flap.keep-closed').on('click', function(e) {
-        const DATE_AVAILABLE = $(this).find('.date').text();
-        $('.modal-message-date').text(DATE_AVAILABLE);
-        $('.modal-wrapper').addClass('show');
+    $(`.${KEEP_CLOSED_CLASS}`).on('click', function(e) {
+        const DATE_AVAILABLE = $(this).find(`.${BOX_FLAP}__date`).text();
+        $('.modal__message-date').text(DATE_AVAILABLE);
+        $('.modal-wrapper').addClass('modal-wrapper--show');
         $('body').addClass('disable-scroll');
     });
     $('.close-modal').on('click', closeModal);
@@ -123,7 +129,7 @@ function init() {
 
     $(document).on('keyup', function(e) {
         const ESC_PRESSED = e.keyCode === 27;
-        const MODAL_OPEN = $('.modal-wrapper').hasClass('show');
+        const MODAL_OPEN = $('.modal-wrapper').hasClass('modal-wrapper--show');
         if (!MODAL_OPEN && ESC_PRESSED) {
             return;
         }
@@ -132,7 +138,7 @@ function init() {
 }
 
 function closeModal(e) {
-    $('.modal-wrapper').removeClass('show');
+    $('.modal-wrapper').removeClass('modal-wrapper--show');
     $('body').removeClass('disable-scroll');
 }
 
@@ -153,37 +159,37 @@ function renderBoxes() {
         let state;
 
         if (hasOpened(org.date)) {
-            state = 'open opened';
+            state = `${OPEN_CLASS} ${OPENED_CLASS}`;
         }
         else if (canOpen(org.date)) {
-            state = 'can-open';
+            state = CAN_OPEN_CLASS;
         }
         else {
-            state = 'keep-closed';
+            state = KEEP_CLOSED_CLASS;
         }
 
-        listItem = `<li class="box" data-date="${org.date}" data-string-date="${org.date_string}">
-                        <button class="box-flap ${state}">
+        listItem = `<li class="box" data-date="${org.date}">
+                        <button class="${BOX_FLAP} ${state}">
                             <div class="box-flap-wrapper">
                                 <h2>
-                                    <strong class="countdown"><span>${countdown}</span></strong>
-                                    <em class="date">${org.date_string}</em>
+                                    <strong class="box-flap__countdown"><span>${countdown}</span></strong>
+                                    <em class="box-flap__date">${org.date_string}</em>
                                 </h2>
                             </div>
                         </button>
                         <div class="box-content">`
 
-                        if (state !== 'keep-closed') {
-                            listItem += `<div class="info">
-                                <h3 class="name">${org.name}</h3>
-                                <p class="description">${org.desc}</p>
+                        if (state !== KEEP_CLOSED_CLASS) {
+                            listItem += `<div class="box-content__info">
+                                <h3 class="box-content__name">${org.name}</h3>
+                                <p class="box-content__description">${org.desc}</p>
                             </div>
-                            <ul class="links">
+                            <ul class="box-links">
                                 <li>
-                                    <a href="${org.site_url}" class="link site-url">Visit Site</a>
+                                    <a href="${org.site_url}" class="control  control--underline">Visit Site</a>
                                 </li>
                                 <li>
-                                    <a href="${org.support_url}" class="link support-url">Support</a>
+                                    <a href="${org.support_url}" class="control control--button">Support</a>
                                 </li>
                             </ul>`
                         }
@@ -191,8 +197,7 @@ function renderBoxes() {
                         listItem += `</div></li>`;
 
         $('.boxes').append(listItem);
-        $('.opened').attr('tabIndex', -1);
-        // $('.keep-closed').attr('disabled', true);
+        $('.box-flap-opened').attr('tabIndex', -1);
         countdown -= 1;
     });
 }
