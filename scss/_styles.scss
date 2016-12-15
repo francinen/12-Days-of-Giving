@@ -126,7 +126,7 @@ h1 {
     right: 0;
 }
 
-.box-flap--opened + .box-content .link {
+.box-flap--opened + .box-content .control {
     z-index: 3;
 }
 
@@ -219,6 +219,7 @@ h1 {
     position: relative;
     display: block;
     padding: 10px;
+    font-size: 1rem;
 }
 
 .control--button {
@@ -271,7 +272,13 @@ h1 {
 }
 
 .modal__message {
-    margin-bottom: $margin;
+    padding-bottom: $margin;
+    border-bottom: 1px solid #dadada;
+}
+
+.modal__close {
+    margin-top: $margin;
+    float: right;
 }
 
 .disable-scroll {

@@ -436,6 +436,14 @@ strong {
 em {
   font-style: normal; }
 
+.clearfix:after {
+  visibility: hidden;
+  display: block;
+  font-size: 0;
+  content: " ";
+  clear: both;
+  height: 0; }
+
 body {
   font-family: 'Baskerville', serif;
   color: #433C39;
@@ -549,7 +557,7 @@ h1 {
   left: 0;
   right: 0; }
 
-.box-flap--opened + .box-content .link {
+.box-flap--opened + .box-content .control {
   z-index: 3; }
 
 .box-flap-wrapper {
@@ -630,7 +638,8 @@ h1 {
 .control {
   position: relative;
   display: block;
-  padding: 10px; }
+  padding: 10px;
+  font-size: 1rem; }
 
 .control--button {
   border-radius: 3px;
@@ -673,7 +682,12 @@ h1 {
   z-index: 5; }
 
 .modal__message {
-  margin-bottom: 1.2rem; }
+  padding-bottom: 1.2rem;
+  border-bottom: 1px solid #dadada; }
+
+.modal__close {
+  margin-top: 1.2rem;
+  float: right; }
 
 .disable-scroll {
   position: relative;

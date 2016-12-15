@@ -115,7 +115,7 @@ function init() {
         $('.modal-wrapper').addClass('modal-wrapper--show');
         $('body').addClass('disable-scroll');
     });
-    $('.close-modal').on('click', closeModal);
+    $('.modal__close').on('click', closeModal);
     $('.modal-wrapper').on('click', closeModal);
 
     $(document).on('keyup', function (e) {
