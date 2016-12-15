@@ -21,7 +21,7 @@ module.exports = function(grunt) {
 		 copy: {
 		 	main: {
 		 		files: [
-		 			{expand: true, src: ['js/vendor/*'], dest: 'dist/', filter: 'isFile'},
+		 			{expand: true, src: ['scripts/vendor/**'], dest: 'dist/', filter: 'isFile'},
 		 			{expand: true, src: ['assets/img/**'], dest: 'dist/', filter: 'isFile'}
 		 		]
 		 	}
@@ -35,14 +35,20 @@ module.exports = function(grunt) {
 		 },
 		 babel: {
 			 options: {
-				 sourceMap: true,
+				 sourceMap: false,
 				 presets: ['es2015']
 			 },
 			 dist: {
-				 files: {
-					 'dist/js/app.js': 'js/app.js',
-					 'dist/js/collection.js': 'js/collection.js'
-				 }
+				//  files: {
+				// 	 'dist/js/app.js': 'js/app.js',
+				//  }
+				files: [{
+                    "expand": true,
+                    "cwd": "scripts/",
+                    "src": ["js/*.js"],
+                    "dest": "dist/scripts/",
+                    "ext": ".js"
+                }]
 			 }
 		 },
 		 watch: {
@@ -54,7 +60,7 @@ module.exports = function(grunt) {
 				 tasks: ['sass'],
 			 },
 			 js: {
-			 	files: ['js/*.js'],
+			 	files: ['scripts/js/*.js'],
 			 	tasks: ['babel']
 			 }
 		 },
@@ -67,7 +73,6 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-connect');
 	grunt.loadNpmTasks('grunt-contrib-copy');
-	grunt.loadNpmTasks('grunt-browserify');
 
 	// Default task(s).
 	grunt.registerTask('default', ['sass', 'autoprefixer', 'babel', 'copy', 'connect', 'watch']);

@@ -1,5 +1,3 @@
-// http://www.womenscollegehospital.ca/programs-and-services/crossroads-clinic
-
 const ORGANIZATIONS = [
     {
         name: 'SKETCH',
@@ -99,109 +97,8 @@ const ORGANIZATIONS = [
     }
 ];
 
-const BOX_FLAP = 'box-flap';
-const OPEN_CLASS = `${BOX_FLAP}--open`;
-const OPENED_CLASS = `${BOX_FLAP}--opened`;
-const CAN_OPEN_CLASS = `${BOX_FLAP}--can-open`;
-const KEEP_CLOSED_CLASS = `${BOX_FLAP}--keep-closed`;
-
-function init() {
-    renderBoxes();
-    $(`.${CAN_OPEN_CLASS}`).on('click', function(e) {
-        e.preventDefault();
-        $(this).removeClass(CAN_OPEN_CLASS).addClass(OPEN_CLASS);
-        this.tabIndex = -1;
-        setTimeout(() => {
-            $(this).addClass(OPENED_CLASS);
-        }, 350);
-
-        const boxDate = $(this).parent().data('date');
-        localStorage.setItem(`days_of_giving_${boxDate}`, 'opened');
-    });
-    $(`.${KEEP_CLOSED_CLASS}`).on('click', function(e) {
-        const DATE_AVAILABLE = $(this).find(`.${BOX_FLAP}__date`).text();
-        $('.modal__message-date').text(DATE_AVAILABLE);
-        $('.modal-wrapper').addClass('modal-wrapper--show');
-        $('body').addClass('disable-scroll');
-    });
-    $('.modal__close').on('click', closeModal);
-    $('.modal-wrapper').on('click', closeModal);
-
-    $(document).on('keyup', function(e) {
-        const ESC_PRESSED = e.keyCode === 27;
-        const MODAL_OPEN = $('.modal-wrapper').hasClass('modal-wrapper--show');
-        if (!MODAL_OPEN && ESC_PRESSED) {
-            return;
-        }
-        closeModal();
-    });
-}
-
-function closeModal(e) {
-    $('.modal-wrapper').removeClass('modal-wrapper--show');
-    $('body').removeClass('disable-scroll');
-}
-
-function canOpen(timestamp) {
-    const TODAY = new Date().getTime();
-    return TODAY >= timestamp;
-}
-
-function hasOpened(timestamp) {
-    return localStorage.getItem(`days_of_giving_${timestamp}`);
-}
-
-function renderBoxes() {
-    let listItem = '';
-    let countdown = ORGANIZATIONS.length;
-
-    ORGANIZATIONS.forEach((org, index) => {
-        let state;
-
-        if (hasOpened(org.date)) {
-            state = `${OPEN_CLASS} ${OPENED_CLASS}`;
-        }
-        else if (canOpen(org.date)) {
-            state = CAN_OPEN_CLASS;
-        }
-        else {
-            state = KEEP_CLOSED_CLASS;
-        }
-
-        listItem = `<li class="box" data-date="${org.date}">
-                        <button class="${BOX_FLAP} ${state}">
-                            <div class="box-flap-wrapper">
-                                <h2>
-                                    <strong class="box-flap__countdown"><span>${countdown}</span></strong>
-                                    <em class="box-flap__date">${org.date_string}</em>
-                                </h2>
-                            </div>
-                        </button>
-                        <div class="box-content">`
-
-                        if (state !== KEEP_CLOSED_CLASS) {
-                            listItem += `<div class="box-content__info">
-                                <h3 class="box-content__name">${org.name}</h3>
-                                <p class="box-content__description">${org.desc}</p>
-                            </div>
-                            <ul class="box-links">
-                                <li>
-                                    <a href="${org.site_url}" class="control  control--underline">Visit Site</a>
-                                </li>
-                                <li>
-                                    <a href="${org.support_url}" class="control control--button">Support</a>
-                                </li>
-                            </ul>`
-                        }
-
-                        listItem += `</div></li>`;
-
-        $('.boxes').append(listItem);
-        $('.box-flap-opened').attr('tabIndex', -1);
-        countdown -= 1;
-    });
-}
-
-$(function() {
-    init();
+define([], function() {
+    return {
+        list: ORGANIZATIONS
+    };
 });
