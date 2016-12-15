@@ -90,15 +90,50 @@ var ORGANIZATIONS = [{
 
 function init() {
     renderBoxes();
-    $('.box-flap:not(.open)').on('click', function (e) {
+    $('.box-flap.can-open').on('click', function (e) {
+        var _this = this;
+
         e.preventDefault();
-        var $this = $(this);
-        $this.addClass('open');
+        $(this).addClass('open');
         this.tabIndex = -1;
         setTimeout(function () {
-            $this.addClass('opened');
+            $(_this).addClass('opened').removeClass('can-open');
         }, 350);
+
+        var boxDate = $(this).parent().data('date');
+        localStorage.setItem('days_of_giving_' + boxDate, 'opened');
     });
+    $('.box-flap.keep-closed').on('click', function (e) {
+        var DATE_AVAILABLE = $(this).find('.date').text();
+        $('.modal-message-date').text(DATE_AVAILABLE);
+        $('.modal-wrapper').addClass('show');
+        $('body').addClass('disable-scroll');
+    });
+    $('.close-modal').on('click', closeModal);
+    $('.modal-wrapper').on('click', closeModal);
+
+    $(document).on('keyup', function (e) {
+        var ESC_PRESSED = e.keyCode === 27;
+        var MODAL_OPEN = $('.modal-wrapper').hasClass('show');
+        if (!MODAL_OPEN && ESC_PRESSED) {
+            return;
+        }
+        closeModal();
+    });
+}
+
+function closeModal(e) {
+    $('.modal-wrapper').removeClass('show');
+    $('body').removeClass('disable-scroll');
+}
+
+function canOpen(timestamp) {
+    var TODAY = new Date().getTime();
+    return TODAY >= timestamp;
+}
+
+function hasOpened(timestamp) {
+    return localStorage.getItem('days_of_giving_' + timestamp);
 }
 
 function renderBoxes() {
@@ -106,9 +141,27 @@ function renderBoxes() {
     var countdown = ORGANIZATIONS.length;
 
     ORGANIZATIONS.forEach(function (org, index) {
-        listItem = '<li class="box">\n                        <button class="box-flap">\n                            <div class="box-flap-wrapper">\n                                <h2>\n                                    <strong class="countdown"><span>' + countdown + '</span></strong>\n                                    <em class="date">' + org.date_string + '</em>\n                                </h2>\n                            </div>\n                        </button>\n                        <div class="box-content">\n                            <div class="info">\n                                <h3 class="name">' + org.name + '</h3>\n                                <p class="description">' + org.desc + '</p>\n                            </div>\n                            <ul class="links">\n                                <li>\n                                    <a href="' + org.site_url + '" class="link site-url">Visit Site</a>\n                                </li>\n                                <li>\n                                    <a href="' + org.support_url + '" class="link support-url">Support</a>\n                                </li>\n                            </ul>\n                        </div>\n                    </li>\n        ';
+        var state = void 0;
+
+        if (hasOpened(org.date)) {
+            state = 'open opened';
+        } else if (canOpen(org.date)) {
+            state = 'can-open';
+        } else {
+            state = 'keep-closed';
+        }
+
+        listItem = '<li class="box" data-date="' + org.date + '" data-string-date="' + org.date_string + '">\n                        <button class="box-flap ' + state + '">\n                            <div class="box-flap-wrapper">\n                                <h2>\n                                    <strong class="countdown"><span>' + countdown + '</span></strong>\n                                    <em class="date">' + org.date_string + '</em>\n                                </h2>\n                            </div>\n                        </button>\n                        <div class="box-content">';
+
+        if (state !== 'keep-closed') {
+            listItem += '<div class="info">\n                                <h3 class="name">' + org.name + '</h3>\n                                <p class="description">' + org.desc + '</p>\n                            </div>\n                            <ul class="links">\n                                <li>\n                                    <a href="' + org.site_url + '" class="link site-url">Visit Site</a>\n                                </li>\n                                <li>\n                                    <a href="' + org.support_url + '" class="link support-url">Support</a>\n                                </li>\n                            </ul>';
+        }
+
+        listItem += '</div></li>';
 
         $('.boxes').append(listItem);
+        $('.opened').attr('tabIndex', -1);
+        // $('.keep-closed').attr('disabled', true);
         countdown -= 1;
     });
 }

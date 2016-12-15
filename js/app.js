@@ -101,15 +101,48 @@ const ORGANIZATIONS = [
 
 function init() {
     renderBoxes();
-    $('.box-flap:not(.open)').on('click', function(e) {
+    $('.box-flap.can-open').on('click', function(e) {
         e.preventDefault();
-        let $this = $(this);
-        $this.addClass('open');
+        $(this).addClass('open');
         this.tabIndex = -1;
         setTimeout(() => {
-            $this.addClass('opened');
+            $(this).addClass('opened').removeClass('can-open');
         }, 350);
+
+        const boxDate = $(this).parent().data('date');
+        localStorage.setItem(`days_of_giving_${boxDate}`, 'opened');
     });
+    $('.box-flap.keep-closed').on('click', function(e) {
+        const DATE_AVAILABLE = $(this).find('.date').text();
+        $('.modal-message-date').text(DATE_AVAILABLE);
+        $('.modal-wrapper').addClass('show');
+        $('body').addClass('disable-scroll');
+    });
+    $('.close-modal').on('click', closeModal);
+    $('.modal-wrapper').on('click', closeModal);
+
+    $(document).on('keyup', function(e) {
+        const ESC_PRESSED = e.keyCode === 27;
+        const MODAL_OPEN = $('.modal-wrapper').hasClass('show');
+        if (!MODAL_OPEN && ESC_PRESSED) {
+            return;
+        }
+        closeModal();
+    });
+}
+
+function closeModal(e) {
+    $('.modal-wrapper').removeClass('show');
+    $('body').removeClass('disable-scroll');
+}
+
+function canOpen(timestamp) {
+    const TODAY = new Date().getTime();
+    return TODAY >= timestamp;
+}
+
+function hasOpened(timestamp) {
+    return localStorage.getItem(`days_of_giving_${timestamp}`);
 }
 
 function renderBoxes() {
@@ -117,8 +150,20 @@ function renderBoxes() {
     let countdown = ORGANIZATIONS.length;
 
     ORGANIZATIONS.forEach((org, index) => {
-        listItem = `<li class="box">
-                        <button class="box-flap">
+        let state;
+
+        if (hasOpened(org.date)) {
+            state = 'open opened';
+        }
+        else if (canOpen(org.date)) {
+            state = 'can-open';
+        }
+        else {
+            state = 'keep-closed';
+        }
+
+        listItem = `<li class="box" data-date="${org.date}" data-string-date="${org.date_string}">
+                        <button class="box-flap ${state}">
                             <div class="box-flap-wrapper">
                                 <h2>
                                     <strong class="countdown"><span>${countdown}</span></strong>
@@ -126,8 +171,10 @@ function renderBoxes() {
                                 </h2>
                             </div>
                         </button>
-                        <div class="box-content">
-                            <div class="info">
+                        <div class="box-content">`
+
+                        if (state !== 'keep-closed') {
+                            listItem += `<div class="info">
                                 <h3 class="name">${org.name}</h3>
                                 <p class="description">${org.desc}</p>
                             </div>
@@ -138,12 +185,14 @@ function renderBoxes() {
                                 <li>
                                     <a href="${org.support_url}" class="link support-url">Support</a>
                                 </li>
-                            </ul>
-                        </div>
-                    </li>
-        `;
+                            </ul>`
+                        }
+
+                        listItem += `</div></li>`;
 
         $('.boxes').append(listItem);
+        $('.opened').attr('tabIndex', -1);
+        // $('.keep-closed').attr('disabled', true);
         countdown -= 1;
     });
 }
