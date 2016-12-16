@@ -458,9 +458,12 @@ em {
 body {
   font-family: 'Baskerville', serif;
   color: #433C39;
+  background: #fafafa;
   counter-reset: days 13; }
 
 header {
+  max-width: 910px;
+  margin: 0 auto;
   padding: 2rem;
   padding-bottom: 6.5rem; }
 
@@ -479,21 +482,64 @@ main {
     bottom: 40px;
     left: 0; }
 
-h1, h2 {
-  color: #fff;
-  font-weight: 400; }
-
-h1 {
-  color: #B33C3C;
-  font-family: 'Mountains of Christmas', 'Baskerville', serif;
-  font-size: 4.2rem;
-  font-weight: 700; }
-
 .wrapper {
   width: 100%;
   margin: 0 auto;
   padding: 2rem;
+  padding-bottom: 0;
   text-align: center; }
+
+.site-header {
+  margin-bottom: 1.2rem;
+  color: #B33C3C;
+  font-family: 'Mountains of Christmas', 'Baskerville', serif;
+  font-size: 5rem;
+  font-weight: 700; }
+  @media all and (min-width: 620px) {
+    .site-header {
+      font-size: 7rem; } }
+
+.site-subheader {
+  font-family: 'Lato', 'Helvetica', serif;
+  font-size: 1.3rem; }
+  @media all and (min-width: 620px) {
+    .site-subheader {
+      font-size: 1.4rem; } }
+
+.site-desc {
+  position: relative;
+  margin: 2rem auto 0;
+  font-size: 1.2rem; }
+  @media all and (min-width: 620px) {
+    .site-desc {
+      width: 80%; } }
+
+.site-desc * + * {
+  margin-top: 2rem; }
+
+.site-hr {
+  position: relative;
+  width: 150px;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 1.5rem;
+  color: #e1e1e1; }
+  .site-hr::before {
+    content: '';
+    position: absolute;
+    top: calc(50% - 2px);
+    left: 10px;
+    right: 10px;
+    z-index: 1;
+    display: block;
+    height: 1px;
+    border-top: 2px solid #e1e1e1; }
+
+.site-hr__icon {
+  position: relative;
+  z-index: 2;
+  padding: 0 10px;
+  background: #fafafa; }
 
 .boxes {
   margin: 0 auto;
@@ -606,8 +652,16 @@ h1 {
   padding: 5px 0;
   color: #6e1111;
   font-size: 1.2rem;
+  font-weight: 400;
   background: #f8f8f8;
   transform: rotate(-45deg); }
+
+.box-flap--keep-closed__icon {
+  position: absolute;
+  top: 10px;
+  left: 15px;
+  color: #8d2f2f;
+  font-size: 2.5rem; }
 
 .box-content::after {
   content: '';

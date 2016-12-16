@@ -52,15 +52,20 @@ define(['collection', 'util'], function(Collection, Util) {
 
                 let ariaHidden = !opened;
 
-                let ariaLabel = state === KEEP_CLOSED_CLASS ? `This charity will be revealed on ${org.date_string}.` : `Click this button to reveal the recommended charity for ${org.date_string}.`;
+                let ariaLabel = state === KEEP_CLOSED_CLASS ? `This organization will be revealed on ${org.date_string}.` : `Click this button to reveal the featured organization for ${org.date_string}.`;
 
                 const CONTROL_TAB_INDEX = opened ? 0 : -1;
 
                 listItem = `<li class="box" data-date="${org.date}">
                                 <button class="${BOX_FLAP} ${state}" aria-label="${ariaLabel}"
                                 aria-controls="box-content-${org.date}">
-                                    <div class="box-flap-wrapper">
-                                        <h2>
+                                    <div class="box-flap-wrapper">`
+
+                                    if (state === KEEP_CLOSED_CLASS) {
+                                        listItem += `<i class="fa fa-lock ${KEEP_CLOSED_CLASS}__icon" aria-hidden="true"></i>`;
+                                    }
+
+                                        listItem += `<h2>
                                             <strong class="box-flap__countdown"><span>${countdown}</span></strong>
                                             <em class="box-flap__date">${org.date_string}</em>
                                         </h2>
