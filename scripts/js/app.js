@@ -20,6 +20,10 @@ define(['collection', 'util'], function(Collection, Util) {
             let $flap = $(this);
             $flap.removeClass(CAN_OPEN_CLASS).addClass(OPEN_CLASS);
             $flap[0].tabIndex = -1;
+            let $controls = $flap.next().attr('aria-hidden', false).find('.control');
+            $controls.removeAttr('tabIndex');
+            $controls[0].focus();
+
             setTimeout(() => {
                 $flap.addClass(OPENED_CLASS);
             }, 350);
@@ -34,8 +38,9 @@ define(['collection', 'util'], function(Collection, Util) {
 
             Collection.list.forEach((org, index) => {
                 let state;
+                let opened = Util.hasOpened(org.date);
 
-                if (Util.hasOpened(org.date)) {
+                if (opened) {
                     state = `${OPEN_CLASS} ${OPENED_CLASS}`;
                 }
                 else if (Util.canOpen(org.date)) {
@@ -45,8 +50,15 @@ define(['collection', 'util'], function(Collection, Util) {
                     state = KEEP_CLOSED_CLASS;
                 }
 
+                let ariaHidden = !opened;
+
+                let ariaLabel = state === KEEP_CLOSED_CLASS ? `This charity will be revealed on ${org.date_string}.` : `Click this button to reveal the recommended charity for ${org.date_string}.`;
+
+                const CONTROL_TAB_INDEX = opened ? 0 : -1;
+
                 listItem = `<li class="box" data-date="${org.date}">
-                                <button class="${BOX_FLAP} ${state}">
+                                <button class="${BOX_FLAP} ${state}" aria-label="${ariaLabel}"
+                                aria-controls="box-content-${org.date}">
                                     <div class="box-flap-wrapper">
                                         <h2>
                                             <strong class="box-flap__countdown"><span>${countdown}</span></strong>
@@ -54,7 +66,7 @@ define(['collection', 'util'], function(Collection, Util) {
                                         </h2>
                                     </div>
                                 </button>
-                                <div class="box-content">`
+                                <div id="box-content-${org.date}" class="box-content" aria-hidden=${ariaHidden} aria-live="polite">`
 
                                 if (state !== KEEP_CLOSED_CLASS) {
                                     listItem += `<div class="box-content__info">
@@ -63,10 +75,12 @@ define(['collection', 'util'], function(Collection, Util) {
                                     </div>
                                     <ul class="box-links">
                                         <li>
-                                            <a href="${org.site_url}" class="control  control--underline">Visit Site</a>
+                                            <a href="${org.site_url}" target="_blank" rel="noopener" class="control  control--secondary" tabIndex="${CONTROL_TAB_INDEX}" aria-labelledby="site-url-${org.date}">Visit Site</a>
+                                            <p id="site-url-${org.date}" class="offscreen-text">Today's featured charity is ${org.name}. Visit their website to learn more about ${org.name}. This will open in a new window.</p>
                                         </li>
                                         <li>
-                                            <a href="${org.support_url}" class="control control--button">Support</a>
+                                            <a href="${org.support_url}" target="_blank" rel="noopener" class="control control--primary" tabIndex="${CONTROL_TAB_INDEX}" aria-labelledby="support-url-${org.date}">Support</a>
+                                            <p id="support-url-${org.date}" class="offscreen-text">Find out ways to support ${org.name}. This will open in a new window.</p>
                                         </li>
                                     </ul>`
                                 }
@@ -74,30 +88,37 @@ define(['collection', 'util'], function(Collection, Util) {
                                 listItem += `</div></li>`;
 
                 $('.boxes').append(listItem);
-                $('.box-flap-opened').attr('tabIndex', -1);
                 countdown -= 1;
             });
+
+            $(`.${OPENED_CLASS}`).attr('tabIndex', -1).attr('aria-hidden', true);
         },
 
         showModal() {
             const DATE_AVAILABLE = $(this).find(`.${BOX_FLAP}__date`).text();
+            $(this).addClass('modal-trigger');
             $('.modal__message-date').text(DATE_AVAILABLE);
-            $('.modal-wrapper').addClass('modal-wrapper--show');
+            $('.modal-wrapper').addClass('modal-wrapper--show').attr('aria-hidden', false);
             $('body').addClass('disable-scroll');
+            $('.modal__close').focus();
+            $(`.${BOX_FLAP}`).attr('tabIndex', -1);
         },
 
-        closeModal() {
-            $('.modal-wrapper').removeClass('modal-wrapper--show');
+        closeModal(evt) {
+            $('.modal-wrapper').removeClass('modal-wrapper--show').attr('aria-hidden', true);
             $('body').removeClass('disable-scroll');
+            $(`.${CAN_OPEN_CLASS}, .${KEEP_CLOSED_CLASS}`).attr('tabIndex', 0);
+            $('.modal-trigger').focus();
+            $('.modal-trigger').removeClass('modal-trigger');
         },
 
         closeModalOnEsc(evt) {
             const ESC_PRESSED = evt.keyCode === 27;
             const MODAL_OPEN = $('.modal-wrapper').hasClass('modal-wrapper--show');
-            if (!MODAL_OPEN && ESC_PRESSED) {
+            if (MODAL_OPEN && !ESC_PRESSED || !MODAL_OPEN && !ESC_PRESSED) {
                 return;
             }
-            this.closeModal();
+            this.closeModal(evt);
         }
     }
 });

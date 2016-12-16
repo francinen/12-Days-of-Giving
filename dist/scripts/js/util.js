@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 define([], function () {
     return {
@@ -7,7 +7,7 @@ define([], function () {
             return TODAY >= timestamp;
         },
         hasOpened: function hasOpened(timestamp) {
-            return localStorage.getItem("days_of_giving_" + timestamp);
+            return localStorage.getItem('days_of_giving_' + timestamp) === 'opened';
         }
     };
 });

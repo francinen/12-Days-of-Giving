@@ -444,6 +444,17 @@ em {
   clear: both;
   height: 0; }
 
+.offscreen-text {
+  position: absolute;
+  clip: rect(1px 1px 1px 1px);
+  /* for Internet Explorer */
+  clip: rect(1px, 1px, 1px, 1px);
+  padding: 0;
+  border: 0;
+  height: 1px;
+  width: 1px;
+  overflow: hidden; }
+
 body {
   font-family: 'Baskerville', serif;
   color: #433C39;
@@ -486,19 +497,14 @@ h1 {
 
 .boxes {
   margin: 0 auto;
-  display: -ms-flexbox;
   display: flex;
-  -ms-flex-direction: column;
-      flex-direction: column; }
+  flex-direction: column; }
   @media all and (min-width: 620px) {
     .boxes {
       width: 575px;
-      -ms-flex-direction: row;
-          flex-direction: row;
-      -ms-flex-wrap: wrap;
-          flex-wrap: wrap;
-      -ms-flex-pack: distribute;
-          justify-content: space-around; } }
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: space-around; } }
   @media all and (min-width: 890px) {
     .boxes {
       width: 860px; } }
@@ -509,15 +515,12 @@ h1 {
   margin: 1.2rem auto 0; }
   @media all and (min-width: 620px) {
     .box {
-      -ms-flex-preferred-size: 256px;
-          flex-basis: 256px; } }
+      flex-basis: 256px; } }
 
 .box-content {
   position: relative;
-  display: -ms-flexbox;
   display: flex;
-  -ms-flex-direction: column;
-      flex-direction: column;
+  flex-direction: column;
   width: 100%;
   height: 24rem;
   padding: 2rem;
@@ -574,23 +577,16 @@ h1 {
   left: 0;
   right: 0;
   bottom: 0;
-  display: -ms-flexbox;
   display: flex;
-  -ms-flex-direction: column;
-      flex-direction: column;
-  -ms-flex-pack: center;
-      justify-content: center;
-  -ms-flex-align: center;
-      align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   overflow: hidden; }
 
 .box-flap__countdown {
-  display: -ms-flexbox;
   display: flex;
-  -ms-flex-pack: center;
-      justify-content: center;
-  -ms-flex-align: center;
-      align-items: center;
+  justify-content: center;
+  align-items: center;
   width: 8rem;
   height: 8rem;
   border-radius: 50%;
@@ -633,7 +629,6 @@ h1 {
   font-family: 'Lato', Helvetica, Arial, sans-serif; }
 
 .box-content__name {
-  display: -ms-flexbox;
   display: flex;
   margin-bottom: 1.2rem;
   width: 100%;
@@ -645,10 +640,8 @@ h1 {
   font-size: 1.1rem; }
 
 .box-links {
-  display: -ms-flexbox;
   display: flex;
-  -ms-flex-pack: justify;
-      justify-content: space-between;
+  justify-content: space-between;
   width: 100%;
   margin-top: auto;
   padding-top: 0; }
@@ -656,35 +649,24 @@ h1 {
 .control {
   position: relative;
   display: block;
-  padding: 10px;
-  font-size: 1rem; }
-
-.control--button {
   border-radius: 3px;
-  background: #920b0b;
-  color: #fff;
+  border: 1px dashed transparent;
+  padding: 10px;
+  font-size: 1rem;
   transition: background 0.2s; }
-  .control--button:hover, .control--button:focus {
-    background: #7a0909; }
 
-.control--underline {
-  border-bottom: 1px dashed;
-  border-bottom-color: #433C39;
-  transition: border-bottom-color 0.2s, color 0.2s; }
-  .control--underline:hover, .control--underline:focus {
-    border-bottom-color: #920b0b;
-    color: #920b0b; }
+.control--primary {
+  background: #920b0b;
+  color: #fff; }
+  .control--primary:hover, .control--primary:focus {
+    background: #7a0909;
+    text-decoration: underline; }
 
-.modal {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 80%;
-  max-width: 480px;
-  padding: 2rem;
-  font-size: 1.3rem;
-  background: #fff;
-  transform: translateY(-50%) translateX(-50%); }
+.control--secondary {
+  background: #e7e7e7; }
+  .control--secondary:hover, .control--secondary:focus {
+    background: #dadada;
+    text-decoration: underline; }
 
 .modal-wrapper {
   display: none;
@@ -699,6 +681,19 @@ h1 {
   display: block;
   z-index: 5; }
 
+.modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 80%;
+  max-width: 480px;
+  border-radius: 3px;
+  padding: 2rem;
+  font-size: 1.3rem;
+  background: #fff;
+  box-shadow: 0 0 20px #2c2c2c;
+  transform: translateY(-50%) translateX(-50%); }
+
 .modal__message {
   padding-bottom: 1.2rem;
   border-bottom: 1px solid #dadada; }
@@ -710,14 +705,6 @@ h1 {
 .disable-scroll {
   position: relative;
   overflow: hidden; }
-
-@keyframes peek {
-  0% {
-    transform: perspective(0) rotateX(0deg); }
-  50% {
-    transform: perspective(4000px) rotateX(12deg); }
-  100% {
-    transform: perspective(0) rotateX(0deg); } }
 
 @keyframes open {
   0% {

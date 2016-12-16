@@ -218,42 +218,30 @@ h1 {
 .control {
     position: relative;
     display: block;
+    border-radius: 3px;
+    border: 1px dashed transparent;
     padding: 10px;
     font-size: 1rem;
+    transition: background 0.2s;
 }
 
-.control--button {
-    border-radius: 3px;
+.control--primary {
     background: #920b0b;
     color: #fff;
-    transition: background 0.2s;
     &:hover,
     &:focus {
         background: darken(#920b0b, 5%);
+        text-decoration: underline;
     }
 }
 
-.control--underline {
-    border-bottom: 1px dashed;
-    border-bottom-color: $contentColour;
-    transition: border-bottom-color 0.2s, color 0.2s;
+.control--secondary {
+    background: #e7e7e7;
     &:hover,
     &:focus {
-        border-bottom-color: #920b0b;
-        color: #920b0b;
+        background: darken(#e7e7e7, 5%);
+        text-decoration: underline;
     }
-}
-
-.modal {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 80%;
-    max-width: 480px;
-    padding: $padding;
-    font-size: 1.3rem;
-    background: #fff;
-    transform: translateY(-50%) translateX(-50%);
 }
 
 .modal-wrapper {
@@ -271,6 +259,20 @@ h1 {
     z-index: 5;
 }
 
+.modal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 80%;
+    max-width: 480px;
+    border-radius: 3px;
+    padding: $padding;
+    font-size: 1.3rem;
+    background: #fff;
+    box-shadow: 0 0 20px #2c2c2c;
+    transform: translateY(-50%) translateX(-50%);
+}
+
 .modal__message {
     padding-bottom: $margin;
     border-bottom: 1px solid #dadada;
@@ -284,18 +286,6 @@ h1 {
 .disable-scroll {
     position: relative;
     overflow: hidden;
-}
-
-@keyframes peek {
-    0% {
-        transform: perspective(0) rotateX(0deg);
-    }
-    50% {
-        transform: perspective(4000px) rotateX(12deg);
-    }
-    100% {
-        transform: perspective(0) rotateX(0deg);
-    }
 }
 
 @keyframes open {

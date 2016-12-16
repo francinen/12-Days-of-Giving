@@ -20,10 +20,10 @@
             </ol>
         </div>
     </main>
-    <div class="modal-wrapper">
-        <div class="modal clearfix">
-            <p class="modal__message">Come back on <em class="modal__message-date"></em> to see what's inside!</p>
-            <button class="modal__close control control--button">OK</button>
+    <div class="modal-wrapper" aria-hidden="true">
+        <div class="modal clearfix" role="dialog" aria-labelledby="dialog-desc">
+            <p id="dialog-desc" class="modal__message">Come back on <em class="modal__message-date"></em> to learn about another charity!</p>
+            <button class="modal__close control control--primary" aria-label="Close this modal">OK</button>
         </div>
     </div>
     <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>

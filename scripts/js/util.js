@@ -6,7 +6,7 @@ define([], function() {
         },
 
         hasOpened(timestamp) {
-            return localStorage.getItem(`days_of_giving_${timestamp}`);
+            return localStorage.getItem(`days_of_giving_${timestamp}`) === 'opened';
         }
     };
 });
